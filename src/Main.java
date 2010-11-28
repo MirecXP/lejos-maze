@@ -44,31 +44,37 @@ public class Main {
 		//float leftWheelDiameter, float rightWheelDiameter,
 		//float trackWidth, TachoMotor leftMotor, TachoMotor rightMotor,
 		//boolean reverse
-		RobotPilot rbp = new RobotPilot(2.25f,2.25f,5.25f,mB,mA,false);
+		RobotPilot rbp = new RobotPilot(2.25f,4.65f,mB,mA);
 		rbp.forward();
 		TouchSensor bump = new TouchSensor(SensorPort.S1);
 		UltrasonicSensor US = new UltrasonicSensor(SensorPort.S2);
+		US.continuous();
 
 		
 		while (rbp.isMoving())
 		{
 			if (bump.isPressed()){
-				mA.stop();
-				mB.stop();
+				rbp.stop();
+				rbp.travel(-4);
 				//check sonar sensor
-				if (US.getDistance()<5)
-					rbp.rotate(-90);//left
-				else rbp.rotate(90);//right
+				if (US.getDistance()<15)
+					rbp.rotate(90);//left
+				else rbp.rotate(-90);//right
 				while(rbp.isMoving()){}
-				rbp.forward();
+				rbp.travel(85);
+				while(rbp.isMoving()){}
 			}
-			/*if (US.getDistance() > 5){
-				rbp.rotate(90);//right
+			if (US.getDistance() > 15){
+				rbp.travel(3);
+				rbp.rotate(-90);//right
 				rbp.stop();
 				while(rbp.isMoving()){}
-				rbp.forward();
-			}*/
+				rbp.travel(8);
+				while(rbp.isMoving()){}
+			}
+			rbp.forward();
 		}
+		while (true){};
 		
 		
 	}
