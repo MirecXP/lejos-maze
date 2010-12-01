@@ -60,9 +60,9 @@ public class RobotPilot extends TachoPilot{
 		LCD.refresh();
 		int distAVG = (leftd + rightd) / 2;
 		
-		if (leftd > 23 || rightd > 23||Math.abs(leftd-rightd) > 7)
+		if (leftd > 23 || Math.abs(leftd-rightd) > 10)
 			return true;
-		else if (rightd <18){
+		else if (rightd < 19){
 			getAwayFromWall();
 			return correctYourSelf();
 		}
@@ -80,32 +80,37 @@ public class RobotPilot extends TachoPilot{
 			}
 		}
 		else return true;
-		return false;
+		return correctYourSelf();
 	}
 	public void getAwayFromWall(){
 		int leftd = Uleft.getDistance();
 		int rightd = Uright.getDistance();
 		
-		if (Math.abs(leftd - rightd) < 5)
+		if (Math.abs(leftd - rightd) < 10)
 		{
 			if (leftd>=rightd)
 			{
-				left.rotate(-45);
-				this.travel(3);
 				left.rotate(45);
 				this.travel(-3);
+				left.rotate(-55);
+				this.travel(3);
 			}
 			else {
-				right.rotate(45);
-				this.travel(3);
 				right.rotate(-45);
 				this.travel(-3);
+				right.rotate(55);
+				this.travel(3);
 			}
 		}
 		else {
-			right.rotate(-10);
-			left.rotate(10);
+			right.rotate(10);
+			left.rotate(-10);
 		}
+		while(left.isMoving()||right.isMoving()){}
+	}
+	
+	public void rotate(float num){
+		super.rotate(num);
 	}
 	
 }
