@@ -44,41 +44,45 @@ public class Main {
 		//float leftWheelDiameter, float rightWheelDiameter,
 		//float trackWidth, TachoMotor leftMotor, TachoMotor rightMotor,
 		//boolean reverse
-		RobotPilot rbp = new RobotPilot(2.25f,4.65f,mB,mA);
-		rbp.forward();
 		UltrasonicSensor right = new UltrasonicSensor(SensorPort.S2);
 		UltrasonicSensor left = new UltrasonicSensor(SensorPort.S3);
-		UltrasonicSensor front = new UltrasonicSensor(SensorPort.S1);
-		
+		TouchSensor front = new TouchSensor(SensorPort.S1);
 		right.continuous();
 		left.continuous();
-		front.continuous();
-
+		RobotPilot rbp = new RobotPilot(2.25f,4.65f,mB,mA,left,right,front);
+		rbp.setMoveSpeed((rbp.getMoveSpeed()/2));
+		rbp.setTurnSpeed(rbp.getTurnSpeed()/2);
 		
-		while (rbp.isMoving())
+		
+		while(!rbp.correctYourSelf()){}
+		rbp.forward();
+		int rightWallDistance; 
+		
+		while (true)
 		{
-			if (front.getDistance() < 10){
+			if (front.isPressed()){
 				rbp.stop();
-				rbp.travel(-4);
+				rbp.travel(-2);
 				//check sonar sensor
-				if (right.getDistance()<15)
+				if (left.getDistance()<30)
 					rbp.rotate(90);//left
 				else rbp.rotate(-90);//right
 				while(rbp.isMoving()){}
-				rbp.travel(85);
+				rbp.travel(5);
 				while(rbp.isMoving()){}
 			}
-			if (right.getDistance() > 15){
-				rbp.travel(3);
+			if (left.getDistance() > 30){
+				rbp.travel((float) -2.5);
 				rbp.rotate(-90);//right
 				rbp.stop();
 				while(rbp.isMoving()){}
-				rbp.travel(8);
+				rbp.travel(7);
 				while(rbp.isMoving()){}
 			}
-			rbp.forward();
+			//while(rbp.isMoving()&&right.getDistance() > 20&&front.getDistance() < 10){}
+			while(!rbp.correctYourSelf()){}
+			rbp.travel(5);
 		}
-		while (true){};
 		
 		
 	}
