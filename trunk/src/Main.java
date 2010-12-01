@@ -46,25 +46,29 @@ public class Main {
 		//boolean reverse
 		RobotPilot rbp = new RobotPilot(2.25f,4.65f,mB,mA);
 		rbp.forward();
-		TouchSensor bump = new TouchSensor(SensorPort.S1);
-		UltrasonicSensor US = new UltrasonicSensor(SensorPort.S2);
-		US.continuous();
+		UltrasonicSensor right = new UltrasonicSensor(SensorPort.S2);
+		UltrasonicSensor left = new UltrasonicSensor(SensorPort.S3);
+		UltrasonicSensor front = new UltrasonicSensor(SensorPort.S1);
+		
+		right.continuous();
+		left.continuous();
+		front.continuous();
 
 		
 		while (rbp.isMoving())
 		{
-			if (bump.isPressed()){
+			if (front.getDistance() < 10){
 				rbp.stop();
 				rbp.travel(-4);
 				//check sonar sensor
-				if (US.getDistance()<15)
+				if (right.getDistance()<15)
 					rbp.rotate(90);//left
 				else rbp.rotate(-90);//right
 				while(rbp.isMoving()){}
 				rbp.travel(85);
 				while(rbp.isMoving()){}
 			}
-			if (US.getDistance() > 15){
+			if (right.getDistance() > 15){
 				rbp.travel(3);
 				rbp.rotate(-90);//right
 				rbp.stop();
